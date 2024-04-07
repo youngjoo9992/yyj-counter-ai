@@ -135,7 +135,6 @@ function App() {
         )}
         <InputArea>
           <Input
-            isClearable
             onChange={(e) => setTopic(e.target.value)}
             value={topic}
             radius="lg"
@@ -164,7 +163,6 @@ function App() {
             }}
           />
           <Textarea
-            isClearable
             onChange={(e) => setOpinion(e.target.value)}
             value={opinion}
             radius="lg"
