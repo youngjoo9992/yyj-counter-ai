@@ -256,6 +256,10 @@ const Title = styled.div`
   height: auto;
   text-align: center;
   padding: 1rem;
+  @media only screen and (max-width: 600px) {
+    font-size: 1.3rem;
+    padding: 0;
+  }
 `;
 
 const ResponseArea = styled.div`
