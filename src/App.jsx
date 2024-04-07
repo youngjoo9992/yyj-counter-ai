@@ -193,6 +193,7 @@ function App() {
             }}
           />
           <Button
+            isDisabled={topic === "" || opinion === ""}
             className="shadow-xl bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
             variant="ghost"
             onPress={() => {
