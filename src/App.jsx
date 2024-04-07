@@ -13,6 +13,19 @@ import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { get_counter } from "./api/counter";
 
+const examples = [
+  {
+    topic: "의대 증원",
+    opinion:
+      "나는 의대 증원에 반대해. 왜냐하면 의대 증원으로 인해 의료 재정이 붕괴될 가능성이 있고 의료 교육이 부실해질 수 있기 때문이야.",
+  },
+  {
+    topic: "코로나 백신",
+    opinion:
+      "나는 코로나 백신에 대해 부정적인 시각을 가지고 있어. 왜냐하면 코로나 백신은 코로나 치료에 별로 도움이 되지도 않을 뿐더러 그저 제약 회사들이 돈을 벌기 위한 수단에 불과하기 때문이야.",
+  },
+];
+
 function App() {
   const [topic, setTopic] = useState("");
   const [opinion, setOpinion] = useState("");
@@ -49,9 +62,17 @@ function App() {
   return (
     <Container className="dark" backgroundRotation={backgroundRotation}>
       <Topic>
-        {response === "" || response === "loading"
-          ? "Counter AI: 반박 인공지능 도우미"
-          : submittedTopic}
+        {response === "" || response === "loading" ? (
+          <>
+            Counter AI: 반박 인공지능
+            <span style={{ fontSize: "1rem", opacity: 0.6 }}>
+              {" "}
+              by 30825 윤영주
+            </span>
+          </>
+        ) : (
+          submittedTopic
+        )}
       </Topic>
       <Divider />
       <Main>
@@ -64,7 +85,7 @@ function App() {
             ? "반박을 생성하는 중입니다..."
             : "👇여기 의견에 대한 반박을 생성해냈습니다👇"}
         </Title>
-        {response !== "" && (
+        {response !== "" ? (
           <ResponseArea>
             <Card className="w-full shadow-xl dark:bg-default/60 backdrop-saturate-200 backdrop-blur-xl">
               <CardHeader className="font-semibold">Counter AI</CardHeader>
@@ -92,6 +113,19 @@ function App() {
               </CardFooter>
             </Card>
           </ResponseArea>
+        ) : (
+          <ExampleArea>
+            ✨입력 예시✨
+            {examples.map((example, idx) => (
+              <ExampleInputs
+                key={idx}
+                exampleTopic={example.topic}
+                exampleOpinion={example.opinion}
+                setTopic={setTopic}
+                setOpinion={setOpinion}
+              />
+            ))}
+          </ExampleArea>
         )}
         <InputArea>
           <Input
@@ -234,6 +268,54 @@ const InputArea = styled.div`
   width: 80%;
   max-width: 60rem;
   gap: 1rem;
+`;
+
+const ExampleArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  gap: 1rem;
+`;
+
+const ExampleInputs = ({
+  exampleTopic,
+  exampleOpinion,
+  setTopic,
+  setOpinion,
+}) => {
+  const displayLength = 50;
+
+  const setExample = () => {
+    setTopic(exampleTopic);
+    setOpinion(exampleOpinion);
+  };
+
+  return (
+    <ExampleInputContainer>
+      <Button
+        radius="full"
+        className="shadow-xl dark:bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
+        onPress={() => {
+          setExample();
+        }}
+      >
+        {exampleTopic +
+          ": " +
+          (exampleOpinion.length >= displayLength
+            ? exampleOpinion.slice(0, displayLength - 1)
+            : exampleOpinion) +
+          "..."}
+      </Button>
+    </ExampleInputContainer>
+  );
+};
+
+const ExampleInputContainer = styled.div`
+  width: auto;
+  height: auto;
 `;
 
 export default App;
