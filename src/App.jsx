@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { get_counter } from "./api/counter";
+import { IoMdSend } from "react-icons/io";
 
 const examples = [
   {
@@ -192,13 +193,14 @@ function App() {
             }}
           />
           <Button
-            color="primary"
+            className="shadow-xl bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
             variant="ghost"
             onPress={() => {
               submit();
             }}
           >
             제출
+            <IoMdSend />
           </Button>
         </InputArea>
       </Main>
