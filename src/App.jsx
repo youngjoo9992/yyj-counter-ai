@@ -235,6 +235,9 @@ const Main = styled.div`
   box-sizing: border-box;
   gap: 2rem;
   overflow-y: auto;
+  @media only screen and (max-width: 600px) {
+    padding: 1rem;
+  }
 `;
 
 const Topic = styled.div`
@@ -291,7 +294,7 @@ const ExampleInputs = ({
   setTopic,
   setOpinion,
 }) => {
-  const displayLength = 50;
+  const displayLength = window.innerWidth >= 600 ? 50 : 25;
 
   const setExample = () => {
     setTopic(exampleTopic);
