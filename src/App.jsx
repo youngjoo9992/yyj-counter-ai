@@ -268,6 +268,7 @@ const ResponseArea = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 60rem;
   /* max-height: 30rem; */
   gap: 1rem;
 `;
