@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://144.24.76.31:80";
+export const BACKEND_URL = "https://counter-ai.yyjdev.me";
