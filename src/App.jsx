@@ -11,8 +11,9 @@ import {
 } from "@nextui-org/react";
 import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { get_counter } from "./api/counter";
+import { get_counter, cancel_get_counter } from "./api/counter";
 import { IoMdSend } from "react-icons/io";
+import { FaRegStopCircle } from "react-icons/fa";
 
 const examples = [
   {
@@ -59,6 +60,7 @@ function App() {
         setResponse(res.data.response);
       })
       .catch((err) => {
+        if (err.message === "canceled") return;
         console.error(err);
         setIsError(true);
         setResponse("Counter AI가 반박을 생성하는 중 오류가 발생했습니다.");
@@ -135,6 +137,8 @@ function App() {
         )}
         <InputArea>
           <Input
+            isClearable
+            onClear={() => setTopic("")}
             onChange={(e) => setTopic(e.target.value)}
             value={topic}
             radius="lg"
@@ -163,6 +167,8 @@ function App() {
             }}
           />
           <Textarea
+            isClearable
+            onClear={() => setOpinion("")}
             onChange={(e) => setOpinion(e.target.value)}
             value={opinion}
             radius="lg"
@@ -190,17 +196,30 @@ function App() {
               ],
             }}
           />
-          <Button
-            isDisabled={topic === "" || opinion === ""}
-            className="shadow-xl bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
-            variant="ghost"
-            onPress={() => {
-              submit();
-            }}
-          >
-            제출
-            <IoMdSend />
-          </Button>
+          {response === "loading" ? (
+            <Button
+              onPress={() => {
+                cancel_get_counter();
+                setResponse("");
+              }}
+              color="danger"
+              className="shadow-xl bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
+            >
+              취소 <FaRegStopCircle />
+            </Button>
+          ) : (
+            <Button
+              isDisabled={topic === "" || opinion === ""}
+              className="shadow-xl bg-default/60 backdrop-saturate-200 backdrop-blur-xl"
+              variant="ghost"
+              onPress={() => {
+                submit();
+              }}
+            >
+              제출
+              <IoMdSend />
+            </Button>
+          )}
         </InputArea>
       </Main>
     </Container>
@@ -232,7 +251,7 @@ const Main = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: 3rem 10rem;
+  padding: 3rem 6rem;
   box-sizing: border-box;
   gap: 2rem;
   overflow-y: auto;
@@ -242,7 +261,7 @@ const Main = styled.div`
 `;
 
 const Topic = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 500;
   width: 100%;
   height: auto;
@@ -251,14 +270,14 @@ const Topic = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 700;
   width: 100%;
   height: auto;
   text-align: center;
   padding: 1rem;
   @media only screen and (max-width: 600px) {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     padding: 0;
   }
 `;
@@ -270,7 +289,6 @@ const ResponseArea = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 60rem;
-  /* max-height: 30rem; */
   gap: 1rem;
 `;
 
