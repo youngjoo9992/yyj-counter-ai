@@ -9,7 +9,7 @@ import {
   CardFooter,
   Skeleton,
 } from "@nextui-org/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { get_counter, cancel_get_counter } from "./api/counter";
 import { IoMdSend } from "react-icons/io";
@@ -40,6 +40,7 @@ function App() {
   const [submittedTopic, setSubmittedTopic] = useState("");
   const [isError, setIsError] = useState(false);
   const [backgroundRotation, setBackgroundRotation] = useState(0);
+  const responseRef = useRef(null);
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -57,7 +58,13 @@ function App() {
     setResponse("loading");
     get_counter(topic, opinion)
       .then((res) => {
-        setResponse(res.data.response);
+        const parser = new DOMParser();
+        let response = res.data.response;
+        setResponse(response);
+        console.log(response);
+        response = response.replace(/(\r\n|\n|\r)/gm, "<br>");
+        response = parser.parseFromString(response, "text/html");
+        responseRef.current = response;
       })
       .catch((err) => {
         if (err.message === "canceled") return;
@@ -111,7 +118,7 @@ function App() {
                     </Skeleton>
                   </div>
                 ) : (
-                  response
+                  responseRef.current
                 )}
               </CardBody>
               <CardFooter className="text-xs text-neutral-400">
